@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-#define SERV_IP "127.0.0.1"
+#define SERV_IP "192.168.43.168"
 #define port 8080
 
 using namespace std;
@@ -37,10 +37,14 @@ int main()
 		close(sock);
 		return 1;
 	}
-	send(ServSock, message, sizeof(message), 0);
-	int b_recv;
-	b_recv = recv(ServSock, buff, sizeof(buff), 0);
-	cout << buff << "\n";
+	while (1)
+	{
+        cin >> message;
+        send(ServSock, message, sizeof(message), 0);
+        int b_recv;
+        b_recv = recv(ServSock, buff, sizeof(buff), 0);
+        cout << buff << "\n";
+	}
 	return 0;
 }
 
