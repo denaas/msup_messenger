@@ -2,6 +2,8 @@ from twisted.internet import reactor
 from twisted.internet.protocol import ServerFactory 
 from twisted.protocols.basic import LineOnlyReceiver 
 
+users = {}
+
 class ChatProtocol(LineOnlyReceiver): 
 
     name = "" 
@@ -24,6 +26,17 @@ class ChatProtocol(LineOnlyReceiver):
         self.factory.clientProtocols.remove(self) 
         self.factory.sendMessageToAllClients(self.getName()+" has disconnected.") 
 
+    def register(self, name, password):
+        if not users.get(name) is None:
+            return False
+        users[name] = password
+        return True
+
+    def auth(self, name, password):
+        if users.get(name) == password:
+            return name
+        return False
+
     def lineReceived(self, line): 
         print self.getName()+" said "+line 
         if line[:5]=="/NAME": 
@@ -32,8 +45,28 @@ class ChatProtocol(LineOnlyReceiver):
             self.factory.sendMessageToAllClients(oldName+" changed name to "+self.getName()) 
         elif line=="/EXIT": 
             self.transport.loseConnection() 
-        else: 
-            self.factory.sendMessageToAllClients(self.getName()+" says "+line) 
+        elif line[:len("/REGISTER")]=="/REGISTER":
+            args = line.split(' ')[1:]
+            if len(args) < 2:
+                self.sendLine("/REGISTER FAILURE ARGS")
+            elif self.register(args[0], args[1]):
+                self.sendLine("/REGISTER OK")
+            else:
+                self.sendLine("/REGISTER FAILURE EXISTS")
+        elif line[:len("/AUTH")]=="/AUTH":
+            args = line.split(' ')[1:] + ['', '']
+            auth = self.auth(args[0], args[1])
+            if auth is False:
+                self.sendLine("/AUTH FAILURE")
+            else:
+                self.sendLine("/AUTH OK")
+                self.name = auth
+                self.factory.sendMessageToAllClients("Say hello to " + self.name)
+        elif self.name != "": 
+            self.factory.sendMessageToAllClients(self.getName()+" says: "+line) 
+        else:
+            self.sendLine("Unknown command")
+            
 
     def sendLine(self, line): 
         self.transport.write(line+"\r\n") 
