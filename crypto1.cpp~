@@ -8,13 +8,15 @@
 
 using namespace std;
 
-int crypt_text ( FILE * in, FILE * out, const unsigned char * key, const unsigned char * iv) {
+int crypt_text ( FILE * in, FILE * out, const unsigned char * key) {
+    unsigned char iv[8] = {0,0,0,0,0,0,0,0};
     int outlen, inlen;
     unsigned char inbuf[BUFSIZE], outbuf[BUFSIZE];
     EVP_CIPHER_CTX ctx;
     EVP_CIPHER_CTX_init(&ctx);
     const EVP_CIPHER * cipher;
-    cipher = EVP_aes_256_cbc();
+    //cipher = EVP_rc2_cbc();
+    cipher = EVP_aes_256_ctr();
     EVP_EncryptInit(&ctx, cipher, key, iv);
 
     for(;;) {
@@ -30,13 +32,15 @@ int crypt_text ( FILE * in, FILE * out, const unsigned char * key, const unsigne
     return 1;
 }
 
-int decrypt_text ( FILE * in, FILE * out, const unsigned char * key, const unsigned char * iv) {
+int decrypt_text ( FILE * in, FILE * out, const unsigned char * key) {
+    unsigned char iv[8] = {0,0,0,0,0,0,0,0};
     int outlen, inlen;
     unsigned char inbuf[BUFSIZE], outbuf[BUFSIZE];
     EVP_CIPHER_CTX ctx;
     EVP_CIPHER_CTX_init(&ctx);
     const EVP_CIPHER * cipher;
-    cipher = EVP_aes_256_cbc();
+    //cipher = EVP_rc2_cbc();
+    cipher = EVP_aes_256_ctr();
     EVP_DecryptInit(&ctx, cipher, key, iv);
 
     for(;;) {
@@ -57,18 +61,16 @@ int main(int argc, char** argv)
 {
     OpenSSL_add_all_ciphers();
     FILE *in, *out;
-    in = fopen("text.txt", "rb");
-    out = fopen("out.txt", "wb");
-    unsigned char key[16], iv[8];
+    in = fopen("text.txt", "r");
+    out = fopen("out.txt", "w");
+    unsigned char key[16];
     RAND_bytes(key, sizeof(key));
-    RAND_bytes(iv, sizeof(iv));
-    crypt_text(in, out, key, iv);
-    fclose(in);
-    fclose(out);
-    in = fopen("out.txt", "rb");
-    out = fopen("out2.txt", "wb");
-    decrypt_text(in, out, key, iv);
-    fclose(in);
-    fclose(out);
+    crypt_text(in, out, key);
+
+     //ofstream fout("out.txt");
+  //  fout << "надо исправить?";
+   // fout.close();
+  //  system("pause");
+
     return 0;
 }
