@@ -6,13 +6,14 @@ from itertools import compress
 
 #import database
 
-users = {}
+users = { 'test': '1', 'protest': '1'}
 port = 8000
 
 class ChatProtocol(LineOnlyReceiver): 
 
 	name = "" 
 	state = 0 # 1 - auth
+	receiver = None
 
 	def getName(self): 
 		if self.name != "" : 
@@ -41,20 +42,22 @@ class ChatProtocol(LineOnlyReceiver):
 
 	def auth(self, name, password):
 		if users.get(name) == password:
+			self.name = name
 			self.state = 1
-			idx = map(lambda x: x.getName(), self.factory.clientProtocols).index(name)
 			return name
 		return False
 
 	def lineReceived(self, line): 
-		print (self.getName()+" said "+line) 
-		if line[:5]=="/NAME": 
+		print (self.getName()+" said "+line)
+		args =  line.split(' ')
+		command = args[0]
+		if command=="/NAME": 
 			oldName = self.getName() 
 			self.name = line[5:].strip() 
-			self.factory.sendMessageToAllClients(oldName+" changed name to "+self.getName()) 
-		elif line=="/EXIT": 
+			#self.factory.sendMessageToAllClients(oldName+" changed name to "+self.getName()) 
+		elif command=="/EXIT": 
 			self.transport.loseConnection() 
-		elif line[:len("/REGISTER")]=="/REGISTER":
+		elif command=="/REGISTER":
 			args = line.split(' ')[1:]
 			if len(args) < 2:
 				self.sendLine("/REGISTER FAILURE ARGS")
@@ -62,16 +65,20 @@ class ChatProtocol(LineOnlyReceiver):
 				self.sendLine("/REGISTER OK")
 			else:
 				self.sendLine("/REGISTER FAILURE EXISTS")
-		elif line[:len("/AUTH")]=="/AUTH":
+		elif command=="/AUTH":
 			args = line.split(' ')[1:] + ['', '']
 			auth = self.auth(args[0], args[1])
 			if auth is False:
 				self.sendLine("/AUTH FAILURE")
 			else:
 				self.sendLine("/AUTH OK")
-				self.factory.sendMessageToAuthClients("Say hello to " + self.name)
-		elif self.name != "" and self.state != 0: 
-			self.factory.sendMessageToAuthClients(self.getName()+" says: "+line) 
+				#self.factory.sendMessageToAuthClients("Say hello to " + self.name)
+		elif command=="/CHAT":
+			self.receiver = args[1]
+		elif command=="/GROUP_CHAT":
+			pass
+		elif self.name != "" and self.state != 0 and self.receiver != None: 
+			self.factory.sendMessageToAuthClients(self.receiver, self.getName()+" says: "+line) 
 		else:
 			self.sendLine("Unknown command")
 			
@@ -90,9 +97,17 @@ class ChatProtocolFactory(ServerFactory):
 		for client in self.clientProtocols:
 			client.sendLine(mesg) 
 	
-	def sendMessageToAuthClients(self, mesg) : 
-		for client in [p for p in self.clientProtocols if p.auth != 0]: 
-			client.sendLine(mesg)
+	def findUser(self, name):
+		for client in self.clientProtocols:
+			if client.getName() == name:
+				return client
+		print('123123')
+		return None
+	
+	def sendMessageToAuthClients(self, name, mesg) :  
+		user = self.findUser(name)
+		if user != None:
+			user.sendLine(mesg)
 
 def main():
 	print ("Starting Server")
