@@ -63,15 +63,9 @@ bool check_hmac(FILE * in, const EVP_MD * md, const unsigned char * key_2){  // 
     fread(hmac1, 1, 20, in);
     HMAC_Update(&ctx, inbuf, BUFSIZE);
     HMAC_Final(&ctx, result, &len);
-    printf("RESULT \n");
-    for (int i = 0;  i < len;  i++) printf("%02x", result[i]);
-    printf("\n HMAC \n");
-    for (int i = 0;  i < len;  i++) printf("%02x", hmac1[i]);
-    printf("\n");
     for (int i = 0;  i < len;  i++) {
         if (result [i] != hmac1 [i]) check = false;
     }
-    printf("check %d \n", check);
     HMAC_CTX_cleanup(&ctx);
     return check;
 }
