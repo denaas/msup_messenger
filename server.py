@@ -6,7 +6,7 @@ from itertools import compress
 
 #import database
 
-users = { 'test': '1', 'protest': '1'}
+users = { "test": "1", "protest": "1"}
 port = 8001
 
 class ChatProtocol(LineOnlyReceiver): 
@@ -62,19 +62,18 @@ class ChatProtocol(LineOnlyReceiver):
 				self.sendLine("/REGISTER FAILURE EXISTS")
 		elif command=="/AUTH":
 			if len(args) != 3 or self.auth(args[1], args[2]) is False:
-				if len(args)!= 3:
-					print("!=3")
-				else :
+				if len(args) == 3:
 					print("not found")
 				self.sendLine("/AUTH FAILURE")
 			else:
 				self.sendLine("/AUTH OK")
 				#self.factory.sendMessageToAuthClients(args[1], "Say hello to " + self.name)
 		elif command=="/MESSAGE":
-			if self.name != "" and self.state != 0 and args[1] != None:
+			if len(args) >= 3 and self.name != "" and self.state != 0 and args[1] != None:
 				self.factory.sendMessageToAuthClients(args[1], "<" + self.getName() + "> : " + " ".join(args[2:])) 
 			else :
-				self.sendLine("error: you are not online. You should authorised")
+				print("ERROR")
+				self.sendLine("/ERROR")
 		elif command=="/GROUP_CHAT":
 			pass
 		else:
@@ -82,7 +81,7 @@ class ChatProtocol(LineOnlyReceiver):
 			
 
 	def sendLine(self, line): 
-		self.transport.write(line+"\r\n") 
+		self.transport.write(line + "\r\n") 
 
 class ChatProtocolFactory(ServerFactory): 
 
