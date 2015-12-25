@@ -1,0 +1,23 @@
+﻿Сборка начата 25.12.2015 21:16:27.
+     1>Проект "D:\Messenger\msup_messenger\WindowsFormsClient\Проект3\Проект3.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\VC\bin\x86_amd64\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\\" /Zi /clr /nologo /W3 /WX- /Od /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.dll" /errorReport:prompt /clr:nostdlib MyForm.cpp
+         MyForm.cpp
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(164): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\string.h(119): note:  см. объявление "strcpy"
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(157): warning C4101: res: неиспользованная локальная переменная
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(156): warning C4101: buff: неиспользованная локальная переменная
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(247): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\string.h(119): note:  см. объявление "strcpy"
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(240): warning C4101: res: неиспользованная локальная переменная
+     1>d:\messenger\msup_messenger\windowsformsclient\проект3\MyForm.h(239): warning C4101: buff: неиспользованная локальная переменная
+     1>MyForm.cpp(59): warning C4551: в вызове функции отсутствует список аргументов
+       Link:
+         C:\Program Files (x86)\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Messenger\msup_messenger\WindowsFormsClient\x64\Debug\Проект3.exe" /INCREMENTAL /NOLOGO /ASSEMBLYRESOURCE:"x64\Debug\Проект3.MyForm.resources" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\Messenger\msup_messenger\WindowsFormsClient\x64\Debug\Проект3.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X64 x64\Debug\MyForm.obj
+         "x64\Debug\.NETFramework,Version=v4.5.2.AssemblyAttributes.obj"
+         Проект3.vcxproj -> D:\Messenger\msup_messenger\WindowsFormsClient\x64\Debug\Проект3.exe
+     1>Сборка проекта "D:\Messenger\msup_messenger\WindowsFormsClient\Проект3\Проект3.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:02.56
