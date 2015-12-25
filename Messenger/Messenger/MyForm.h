@@ -58,6 +58,7 @@ namespace Auth {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::ErrorProvider^  errorProvider1;
+	private: System::Windows::Forms::ErrorProvider^  errorProvider2;
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -81,7 +82,9 @@ namespace Auth {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->errorProvider1 = (gcnew System::Windows::Forms::ErrorProvider(this->components));
+			this->errorProvider2 = (gcnew System::Windows::Forms::ErrorProvider(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->errorProvider1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->errorProvider2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// richTextBox1
@@ -92,6 +95,7 @@ namespace Auth {
 			this->richTextBox1->Size = System::Drawing::Size(395, 54);
 			this->richTextBox1->TabIndex = 0;
 			this->richTextBox1->Text = L"";
+			this->richTextBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::richTextBox1_KeyPress);
 			// 
 			// richTextBox2
 			// 
@@ -101,6 +105,7 @@ namespace Auth {
 			this->richTextBox2->Size = System::Drawing::Size(395, 54);
 			this->richTextBox2->TabIndex = 1;
 			this->richTextBox2->Text = L"";
+			this->richTextBox2->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::richTextBox2_KeyPress);
 			// 
 			// label1
 			// 
@@ -148,6 +153,10 @@ namespace Auth {
 			// 
 			this->errorProvider1->ContainerControl = this;
 			// 
+			// errorProvider2
+			// 
+			this->errorProvider2->ContainerControl = this;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -162,6 +171,7 @@ namespace Auth {
 			this->Name = L"MyForm";
 			this->Text = L"Messenger";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->errorProvider1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->errorProvider2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -207,8 +217,7 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 	}
 	else {
 		this->richTextBox1->Text = "";
-		this->richTextBox2->Text = "";
-		//errorProvider1->SetError(this->richTextBox1, "ERROR");
+		MessageBox::Show("Неправильный логин/пароль!");
 	}
 }
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -238,6 +247,20 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 	}
 	else {
 
+	}
+}
+private: System::Void richTextBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+	if (e->KeyChar == 32)
+	{
+		errorProvider1->SetError(this->richTextBox1, "В логине нельзя использовать пробел!");
+	}
+}
+private: System::Void richTextBox2_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+	if (e->KeyChar == 32)
+	{
+		errorProvider2 = gcnew ErrorProvider();
+		errorProvider2->SetError(this->richTextBox1, "В пароле нельзя использовать пробел!");
 	}
 }
 };

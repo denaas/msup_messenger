@@ -87,6 +87,7 @@ namespace Messenger {
 			this->richTextBox1->Size = System::Drawing::Size(526, 268);
 			this->richTextBox1->TabIndex = 5;
 			this->richTextBox1->Text = L"";
+			this->richTextBox1->TextChanged += gcnew System::EventHandler(this, &MyForm1::richTextBox1_TextChanged);
 			// 
 			// button1
 			// 
@@ -205,11 +206,18 @@ private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e
 		{
 			s.erase(b_recv - 1, 1);
 			str = gcnew String(s.c_str());
-			this->richTextBox1->Text += str;
+			int check = strcmp(buff, "/ERROR\r\n");
+			if (check == 0) MessageBox::Show("Введите имя получателя!");
+				else this->richTextBox1->Text += str;
 		}
 		if (this->button1->Enabled) break;
 	}
 	Recieve->Start();
+}
+private: System::Void richTextBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+
+	richTextBox1->SelectionStart += richTextBox1->TextLength;
+	richTextBox1->ScrollToCaret();
 }
 };
 }
