@@ -22,8 +22,6 @@ class ChatProtocol(LineOnlyReceiver):
 
 	def connectionMade(self): 
 		print ("New connection from " + self.getName()) 
-		#self.sendLine("Send '/NAME [new name]' to change your name.") 
-		#self.sendLine("Send '/EXIT' to quit.") 
 		self.factory.sendMessageToAllClients(self.getName()+" has joined the party.") 
 		self.factory.clientProtocols.append(self)
 
