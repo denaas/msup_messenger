@@ -24,6 +24,7 @@ class ChatProtocol(LineOnlyReceiver):
 		print ("New connection from " + self.getName()) 
 		self.factory.sendMessageToAllClients(self.getName()+" has joined the party.") 
 		self.factory.clientProtocols.append(self)
+		self.sendLine("Welcome to our chat!\nSend /REGISTER for registration or /AUTH for authentication") 
 
 	def connectionLost(self, reason): 
 		print ("Lost connection from "+self.getName()) 
@@ -46,7 +47,7 @@ class ChatProtocol(LineOnlyReceiver):
 		self.state = 0
 		return False
 
-	def lineReceived(self, line): 
+	def lineReceived(self, line):
 		print (self.getName()+" said " + line)
 		args =  line.split(' ')
 		command = args[0]
@@ -64,6 +65,7 @@ class ChatProtocol(LineOnlyReceiver):
 				self.sendLine("/AUTH FAILURE")
 			else:
 				self.sendLine("/AUTH OK")
+				self.sendLine("Send /MESSAGE to send a message") 
 				#self.factory.sendMessageToAuthClients(args[1], "Say hello to " + self.name)
 		elif command=="/MESSAGE":
 			if self.name != "" and self.state != 0 and args[1] != None:
