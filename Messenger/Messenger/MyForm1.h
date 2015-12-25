@@ -51,14 +51,18 @@ namespace Messenger {
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	protected:
 	private: System::Windows::Forms::Button^  button1;
-	private: System::Windows::Forms::RichTextBox^  richTextBox2;
+
 	private: System::Windows::Forms::Button^  button2;
+	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Timer^  Recieve;
+
+	private: System::ComponentModel::IContainer^  components;
 
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -67,20 +71,22 @@ namespace Messenger {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->richTextBox2 = (gcnew System::Windows::Forms::RichTextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->Recieve = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
 			// richTextBox1
 			// 
 			this->richTextBox1->Location = System::Drawing::Point(59, 39);
 			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->Size = System::Drawing::Size(526, 268);
-			this->richTextBox1->TabIndex = 0;
+			this->richTextBox1->TabIndex = 5;
 			this->richTextBox1->Text = L"";
-			this->richTextBox1->TextChanged += gcnew System::EventHandler(this, &MyForm1::richTextBox1_TextChanged);
 			// 
 			// button1
 			// 
@@ -93,14 +99,6 @@ namespace Messenger {
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm1::button1_Click);
 			// 
-			// richTextBox2
-			// 
-			this->richTextBox2->Location = System::Drawing::Point(59, 346);
-			this->richTextBox2->Name = L"richTextBox2";
-			this->richTextBox2->Size = System::Drawing::Size(526, 40);
-			this->richTextBox2->TabIndex = 3;
-			this->richTextBox2->Text = L"";
-			// 
 			// button2
 			// 
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
@@ -111,18 +109,34 @@ namespace Messenger {
 			this->button2->Text = L"Обновить";
 			this->button2->UseVisualStyleBackColor = true;
 			// 
+			// textBox1
+			// 
+			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
+			this->textBox1->Location = System::Drawing::Point(59, 358);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(526, 26);
+			this->textBox1->TabIndex = 0;
+			this->textBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm1::textBox1_KeyPress);
+			// 
+			// Recieve
+			// 
+			this->Recieve->Enabled = true;
+			this->Recieve->Interval = 500;
+			this->Recieve->Tick += gcnew System::EventHandler(this, &MyForm1::timer1_Tick);
+			// 
 			// MyForm1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(796, 438);
+			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button2);
-			this->Controls->Add(this->richTextBox2);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->richTextBox1);
 			this->Name = L"MyForm1";
-			this->Text = L"w";
+			this->Text = L"Messenger";
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 
@@ -135,18 +149,67 @@ namespace Messenger {
 		}
 
 #pragma endregion
-	private: System::Void richTextBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	}
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 
+		char buff[1024];
+		int res;
 		char message[1024] = "";
-		String ^Message;
-		std::string NewStr;	
-		Message = this->richTextBox2->Text;
+		String ^str, ^Message;
+		str = this->textBox1->Text;
+		std::string NewStr;
+		Message = "/MESSAGE ";
+		Message += str;
 		MarshalString(Message, NewStr);
 		strcpy(message, NewStr.c_str());
+
 		send(my_s, message, strlen(message), 0);
-		this->richTextBox2->Text = "";
+		this->richTextBox1->Text += "You: " + str + "\n";
+
+		this->textBox1->Text = "";
 	}
+private: System::Void textBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+
+
+	if (e->KeyChar == 13)
+	{
+		char buff[1024];
+		int res;
+		char message[1024] = "";
+		String ^str, ^Message;
+		str = this->textBox1->Text;
+		std::string NewStr;
+		Message = "/MESSAGE ";
+		Message += str;
+		MarshalString(Message, NewStr);
+		strcpy(message, NewStr.c_str());
+
+		send(my_s, message, strlen(message), 0);
+		this->richTextBox1->Text += "You: " + str + "\n";
+
+		this->textBox1->Text = "";
+		//this->button2 = true;
+	}
+}
+private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+
+	Recieve->Stop();
+	char buff[1024]="";
+	String ^str;
+	int b_recv;
+	while ((b_recv = recv(my_s, buff, sizeof(buff), 0)) != 0)
+	{
+		std::string s(buff);
+		str = gcnew String(s.c_str());
+		if (b_recv > 0)
+		{
+			s.erase(b_recv - 1, 1);
+			str = gcnew String(s.c_str());
+			this->richTextBox1->Text += str;
+		}
+		if (this->button1->Enabled) break;
+	}
+	Recieve->Start();
+}
 };
 }
