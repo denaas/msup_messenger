@@ -4,7 +4,7 @@ from twisted.protocols.basic import LineOnlyReceiver
 
 from itertools import compress
 
-#import database
+import database_sql
 
 users = { 'test': '1', 'protest': '1'}
 port = 8000
@@ -96,6 +96,8 @@ class ChatProtocolFactory(ServerFactory):
 		for client in self.clientProtocols:
 			if client.getName() == name:
 				return client
+			else:
+				print("Error! No user with such name!")
 		return None
 	
 	def sendMessageToAuthClients(self, name, mesg) :  
