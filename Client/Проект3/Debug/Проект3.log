@@ -1,0 +1,19 @@
+﻿Сборка начата 25.12.2015 15:59:35.
+     1>Проект "C:\Users\Кантемир\Documents\Visual Studio 2015\Projects\Проект3\Проект3\Проект3.vcxproj" в узле 2 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\\" /AI"C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral" /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\\" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.dll" /analyze- /errorReport:prompt /clr:nostdlib MyForm.cpp
+         MyForm.cpp
+     1>c:\users\кантемир\documents\visual studio 2015\projects\проект3\проект3\MyForm.h(168): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\string.h(119): note:  см. объявление "strcpy"
+     1>c:\users\кантемир\documents\visual studio 2015\projects\проект3\проект3\MyForm.h(161): warning C4101: res: неиспользованная локальная переменная
+     1>c:\users\кантемир\documents\visual studio 2015\projects\проект3\проект3\MyForm.h(160): warning C4101: buff: неиспользованная локальная переменная
+     1>MyForm.cpp(32): warning C4551: в вызове функции отсутствует список аргументов
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Кантемир\Documents\Visual Studio 2015\Projects\Проект3\Debug\Проект3.exe" /INCREMENTAL /NOLOGO /ASSEMBLYRESOURCE:"Debug\Проект3.MyForm.resources" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Кантемир\Documents\Visual Studio 2015\Projects\Проект3\Debug\Проект3.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\MyForm.obj
+         "Debug\.NETFramework,Version=v4.5.2.AssemblyAttributes.obj"
+         Проект3.vcxproj -> C:\Users\Кантемир\Documents\Visual Studio 2015\Projects\Проект3\Debug\Проект3.exe
+     1>Сборка проекта "C:\Users\Кантемир\Documents\Visual Studio 2015\Projects\Проект3\Проект3\Проект3.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:02.46
