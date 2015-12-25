@@ -22,8 +22,8 @@ class ChatProtocol(LineOnlyReceiver):
 
 	def connectionMade(self): 
 		print ("New connection from " + self.getName()) 
-		self.sendLine("Send '/NAME [new name]' to change your name.") 
-		self.sendLine("Send '/EXIT' to quit.") 
+		#self.sendLine("Send '/NAME [new name]' to change your name.") 
+		#self.sendLine("Send '/EXIT' to quit.") 
 		self.factory.sendMessageToAllClients(self.getName()+" has joined the party.") 
 		self.factory.clientProtocols.append(self)
 
@@ -45,40 +45,35 @@ class ChatProtocol(LineOnlyReceiver):
 			self.name = name
 			self.state = 1
 			return name
+		self.state = 0
 		return False
 
 	def lineReceived(self, line): 
-		print (self.getName()+" said "+line)
+		print (self.getName()+" said " + line)
 		args =  line.split(' ')
 		command = args[0]
-		if command=="/NAME": 
-			oldName = self.getName() 
-			self.name = line[5:].strip() 
-			#self.factory.sendMessageToAllClients(oldName+" changed name to "+self.getName()) 
-		elif command=="/EXIT": 
+		if command=="/EXIT": 
 			self.transport.loseConnection() 
 		elif command=="/REGISTER":
-			args = line.split(' ')[1:]
-			if len(args) < 2:
+			if len(args) != 3:
 				self.sendLine("/REGISTER FAILURE ARGS")
-			elif self.register(args[0], args[1]):
+			elif self.register(args[1], args[2]):
 				self.sendLine("/REGISTER OK")
 			else:
 				self.sendLine("/REGISTER FAILURE EXISTS")
 		elif command=="/AUTH":
-			args = line.split(' ')[1:] + ['', '']
-			auth = self.auth(args[0], args[1])
-			if auth is False:
+			if len(args) < 3 or self.auth(args[1], args[2]) is False:
 				self.sendLine("/AUTH FAILURE")
 			else:
 				self.sendLine("/AUTH OK")
-				#self.factory.sendMessageToAuthClients("Say hello to " + self.name)
-		elif command=="/CHAT":
-			self.receiver = args[1]
+				#self.factory.sendMessageToAuthClients(args[1], "Say hello to " + self.name)
+		elif command=="/MESSAGE":
+			if self.name != "" and self.state != 0 and args[1] != None:
+				self.factory.sendMessageToAuthClients(args[1], "<" + self.getName() + "> : " + " ".join(args[2:])) 
+			else :
+				self.sendLine("error: you are not online. You should authorised")
 		elif command=="/GROUP_CHAT":
 			pass
-		elif self.name != "" and self.state != 0 and self.receiver != None: 
-			self.factory.sendMessageToAuthClients(self.receiver, self.getName()+" says: "+line) 
 		else:
 			self.sendLine("Unknown command")
 			
@@ -101,12 +96,11 @@ class ChatProtocolFactory(ServerFactory):
 		for client in self.clientProtocols:
 			if client.getName() == name:
 				return client
-		print('123123')
 		return None
 	
 	def sendMessageToAuthClients(self, name, mesg) :  
 		user = self.findUser(name)
-		if user != None:
+		if user != None and user.state != 0:
 			user.sendLine(mesg)
 
 def main():
