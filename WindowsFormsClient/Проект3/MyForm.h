@@ -53,13 +53,16 @@ namespace Проект3 {
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Button^  button2;
+  private: System::Windows::Forms::Timer^  Recieve;
+
+  private: System::ComponentModel::IContainer^  components;
 
 
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -68,10 +71,12 @@ namespace Проект3 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+      this->components = (gcnew System::ComponentModel::Container());
       this->button1 = (gcnew System::Windows::Forms::Button());
       this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
       this->textBox1 = (gcnew System::Windows::Forms::TextBox());
       this->button2 = (gcnew System::Windows::Forms::Button());
+      this->Recieve = (gcnew System::Windows::Forms::Timer(this->components));
       this->SuspendLayout();
       // 
       // button1
@@ -81,7 +86,7 @@ namespace Проект3 {
       this->button1->Name = L"button1";
       this->button1->Size = System::Drawing::Size(142, 37);
       this->button1->TabIndex = 2;
-      this->button1->Text = L"button1";
+      this->button1->Text = L"Send it!";
       this->button1->UseVisualStyleBackColor = true;
       this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
       // 
@@ -91,6 +96,7 @@ namespace Проект3 {
       this->richTextBox1->Margin = System::Windows::Forms::Padding(2);
       this->richTextBox1->Name = L"richTextBox1";
       this->richTextBox1->ReadOnly = true;
+      this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
       this->richTextBox1->Size = System::Drawing::Size(293, 163);
       this->richTextBox1->TabIndex = 1;
       this->richTextBox1->Text = L"";
@@ -117,6 +123,12 @@ namespace Проект3 {
       this->button2->UseVisualStyleBackColor = true;
       this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
       // 
+      // Recieve
+      // 
+      this->Recieve->Enabled = true;
+      this->Recieve->Interval = 500;
+      this->Recieve->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
+      // 
       // MyForm
       // 
       this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -129,6 +141,7 @@ namespace Проект3 {
       this->Margin = System::Windows::Forms::Padding(2);
       this->Name = L"MyForm";
       this->Text = L"MyForm";
+      this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
       this->ResumeLayout(false);
       this->PerformLayout();
 
@@ -148,8 +161,10 @@ namespace Проект3 {
 
 #pragma endregion
 	private: System::Void richTextBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+    richTextBox1->SelectionStart = richTextBox1->SelectionLength;
 	}
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+    /*
 		char buff[1024];
 		int res;
 		char q[1024];
@@ -169,7 +184,8 @@ namespace Проект3 {
 		this->richTextBox1->Text += "Server: " + str + "\n";
 		this->textBox1->Text = "";
 		//this->button2 = true;
-	}
+	*/
+  }
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 	/*while (1)
 	{
@@ -226,16 +242,30 @@ private: System::Void textBox1_KeyPress(System::Object^  sender, System::Windows
 
     send(my_s, q, sizeof(q), 0);
     this->richTextBox1->Text += "You: " + str + "\n";
-    int b_recv;
-    b_recv = recv(my_s, buff, sizeof(buff), 0);
-    string s(buff);
-    str = gcnew String(s.c_str());
-    this->richTextBox1->Text += "Server: " + str + "\n";
+
     this->textBox1->Text = "";
     //this->button2 = true;
   }
 
 }
 
+
+private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
+}
+
+private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+  Recieve->Stop();
+  char buff[1024];
+  String ^str;
+  int b_recv;
+  while ((b_recv = recv(my_s, buff, sizeof(buff), 0))!= 0)
+  {
+    string s(buff);
+    str = gcnew String(s.c_str());
+    if (b_recv > 0) this->richTextBox1->Text += "Server: " + str + "\n";
+    if (this->button1->Enabled) break;
+  }
+  Recieve->Start();
+}
 };
 }
